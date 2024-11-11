@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta tags for character encoding and responsive design -->
+    <meta charset="UTF-8">
+    <title>Athena Learning Platform</title>
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Include Chart.js library (Note: Chart.js is included but not used in this code) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        /* CSS Code for the Application */
+
+        /* Reset default margins and paddings, set box-sizing for all elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Use a system font stack for consistent typography */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* Body styles */
+        body {
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* Hidden class to control visibility */
+        .hidden {
+            display: none;
+        }
+
+        /* ------------------------ Login Page Styles ------------------------ */
+
+        /* Login page background */
+        #loginPage {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Card style for the login form */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            /* Box shadow for subtle depth */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Application title */
+        .card h2 {
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Form group for spacing between labels and inputs */
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* Label styles */
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        /* Input styles */
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        /* Focus state for inputs */
+        .form-group input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        /* Login button styles */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background-color: #2563eb; /* Primary blue color */
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        /* Hover effect for the button */
+        .btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Error message display */
+        #loginError {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Logo styles */
+        .logo {
+            font-size: 40px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        /* Footer styles */
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ------------------------ Dashboard Styles ------------------------ */
+
+        /* Container class to center content and set maximum width */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Header style for dashboards */
+        .header {
+            position: relative;
+            /* Use flexbox to align items */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Secondary button styles */
+        .btn-secondary {
+            background-color: #6b7280; /* Gray color */
+        }
+
+        /* Hover effect for secondary buttons */
+        .btn-secondary:hover {
+            background-color: #4b5563;
+        }
+
+        /* Card style */
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            /* Box shadow for subtle depth */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Badge styles for skills and selections */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 9999px; /* Fully rounded */
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #e5e7eb; /* Light gray background */
+            margin-right: 4px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
+        /* Style for selected badges */
+        .badge.selected {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        /* Project card styles */
+        .project-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            border-left: 5px solid #2563eb; /* Default subject color */
+        }
+
+        /* Subject label on assignment cards */
+        .subject-label {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Status classes */
+        .status-pending span {
+            color: #f59e0b; /* Amber */
+        }
+
+        .status-submitted span {
+            color: #10b981; /* Green */
+        }
+
+        .status-graded span {
+            color: #2563eb; /* Blue */
+        }
+
+        /* Tabs styles */
+        .tabs {
+            margin-bottom: 20px;
+        }
+
+        .tabs .btn {
+            margin-right: 10px;
+        }
+
+        /* Subject colors */
+        .subject-Mathematics {
+            background-color: #2563eb; /* Blue */
+        }
+
+        .subject-Science {
+            background-color: #16a34a; /* Green */
+        }
+
+        .subject-Literature {
+            background-color: #ea580c; /* Orange */
+        }
+
+        .subject-History {
+            background-color: #6b21a8; /* Purple */
+        }
+
+        /* Additional styles for forms and inputs in dashboard */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        /* Exam card styles */
+        .exam-card {
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .question {
+            margin-bottom: 12px;
+        }
+
+        .question h4 {
+            margin-bottom: 8px;
+        }
+
+        .question .options {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .question .options li {
+            margin-bottom: 6px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage">
+        <!-- Login Form Container -->
+        <div class="card">
+            <!-- Logo or Icon -->
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <!-- Application title -->
+            <h2>Athena Learning Platform</h2>
+            <!-- Username input -->
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="Enter username">
+            </div>
+            <!-- Password input -->
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter password">
+            </div>
+            <!-- Login button -->
+            <button class="btn" onclick="login()">Login</button>
+            <!-- Error message display -->
+            <div id="loginError"></div>
+            <!-- Footer with signup link -->
+            <div class="footer">
+                Don't have an account? <a href="#">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teacher Dashboard -->
+    <div id="teacherDashboard" class="container hidden">
+        <!-- Header with dashboard title and logout button -->
+        <div class="header">
+            <h2><span style="color: #2563eb;">Athena</span> Teacher Dashboard</h2>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+        <!-- Teacher content area -->
+        <div id="teacherContent">
+            <!-- Tabs for Assignments and Exams -->
+            <div class="tabs">
+                <button class="btn" onclick="showTeacherTab('assignments')">Assignments</button>
+                <button class="btn" onclick="showTeacherTab('exams')">Exams</button>
+            </div>
+
+            <!-- Assignments Section -->
+            <div id="assignmentsSection">
+                <!-- Card for creating assignments -->
+                <div class="dashboard-card">
+                    <h3>Create Assignment</h3>
+                    <!-- Assignment name input -->
+                    <div class="form-group">
+                        <label>Assignment Name</label>
+                        <input type="text" id="assignmentName" placeholder="Enter assignment name">
+                    </div>
+                    <!-- Subject selection -->
+                    <div class="form-group">
+                        <label>Select Subject</label>
+                        <select id="assignmentSubject">
+                            <option value="" disabled selected>Select a subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="Literature">Literature</option>
+                            <option value="History">History</option>
+                            <!-- Add more subjects as needed -->
+                        </select>
+                    </div>
+                    <!-- Skill selection -->
+                    <div class="form-group">
+                        <label>Select Skills</label>
+                        <div id="skillsList"></div>
+                    </div>
+                    <!-- Due date input -->
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="date" id="dueDate">
+                    </div>
+                    <!-- Button to create assignment -->
+                    <button class="btn" onclick="createAssignment()">Create Assignment</button>
+                </div>
+                <!-- Card displaying assignments -->
+                <div class="dashboard-card">
+                    <h3>Assignments</h3>
+                    <div id="assignmentsList"></div>
+                </div>
+                <!-- Card displaying student submissions -->
+                <div class="dashboard-card">
+                    <h3>Student Submissions</h3>
+                    <div id="studentSubmissions"></div>
+                </div>
+                <!-- Card displaying class averages -->
+                <div class="dashboard-card">
+                    <h3>Class Averages</h3>
+                    <div id="classAverages"></div>
+                </div>
+            </div>
+
+            <!-- Exams Section -->
+            <div id="examsSection" class="hidden">
+                <!-- Card for creating exams -->
+                <div class="dashboard-card">
+                    <h3>Create Exam</h3>
+                    <!-- Exam name input -->
+                    <div class="form-group">
+                        <label>Exam Name</label>
+                        <input type="text" id="examName" placeholder="Enter exam name">
+                    </div>
+                    <!-- Subject selection -->
+                    <div class="form-group">
+                        <label>Select Subject</label>
+                        <select id="examSubject">
+                            <option value="" disabled selected>Select a subject</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Science">Science</option>
+                            <option value="Literature">Literature</option>
+                            <option value="History">History</option>
+                            <!-- Add more subjects as needed -->
+                        </select>
+                    </div>
+                    <!-- Skill selection -->
+                    <div class="form-group">
+                        <label>Select Skills</label>
+                        <div id="examSkillsList"></div>
+                    </div>
+                    <!-- Number of questions -->
+                    <div class="form-group">
+                        <label>Number of Questions</label>
+                        <input type="number" id="numQuestions" min="1" max="20" value="5">
+                    </div>
+                    <!-- Button to create exam -->
+                    <button class="btn" onclick="createExam()">Create Exam</button>
+                </div>
+                <!-- Card displaying exams -->
+                <div class="dashboard-card">
+                    <h3>Exams</h3>
+                    <div id="examsList"></div>
+                </div>
+                <!-- Card displaying exam results -->
+                <div class="dashboard-card">
+                    <h3>Exam Results</h3>
+                    <div id="examResults"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Dashboard -->
+    <div id="studentDashboard" class="container hidden">
+        <!-- Header with dashboard title and logout button -->
+        <div class="header">
+            <h2><span style="color: #2563eb;">Athena</span> Student Dashboard</h2>
+            <button class="btn btn-secondary" onclick="logout()">Logout</button>
+        </div>
+        <!-- Student content area -->
+        <div id="studentContent">
+            <!-- Tabs for Assignments and Exams -->
+            <div class="tabs">
+                <button class="btn" onclick="showStudentTab('assignments')">Assignments</button>
+                <button class="btn" onclick="showStudentTab('exams')">Exams</button>
+            </div>
+
+            <!-- Assignments Section -->
+            <div id="studentAssignmentsSection">
+                <!-- Card displaying student's assignments -->
+                <div class="dashboard-card">
+                    <h3>Your Assignments</h3>
+                    <div id="studentAssignmentsList"></div>
+                </div>
+                <!-- Section for entering topic and generating project ideas -->
+                <div id="projectIdeasSection" class="hidden">
+                    <div class="dashboard-card">
+                        <h3>Enter Your Topic</h3>
+                        <div class="form-group">
+                            <label>Topic</label>
+                            <input type="text" id="studentTopic" placeholder="Enter your topic">
+                        </div>
+                        <!-- Button to generate project ideas -->
+                        <button class="btn" onclick="generateProjects()">Generate Project Ideas</button>
+                    </div>
+                </div>
+                <!-- Section to display generated project ideas -->
+                <div id="displayProjectsSection" class="hidden">
+                    <div class="dashboard-card">
+                        <h3>Project Ideas</h3>
+                        <div id="projectsList"></div>
+                    </div>
+                </div>
+                <!-- Section to display selected project -->
+                <div id="selectedProjectSection" class="hidden">
+                    <div class="dashboard-card">
+                        <h3>Your Selected Project</h3>
+                        <div id="selectedProject"></div>
+                    </div>
+                </div>
+                <!-- Card displaying student's average grade -->
+                <div class="dashboard-card">
+                    <h3>Your Average Grade</h3>
+                    <div id="studentAverageGrade"></div>
+                </div>
+            </div>
+
+            <!-- Exams Section -->
+            <div id="studentExamsSection" class="hidden">
+                <!-- Card displaying available exams -->
+                <div class="dashboard-card">
+                    <h3>Available Exams</h3>
+                    <div id="availableExamsList"></div>
+                </div>
+                <!-- Card displaying exam details -->
+                <div id="examDetailsSection" class="hidden">
+                    <div class="dashboard-card">
+                        <h3 id="examTitle">Exam</h3>
+                        <form id="examForm"></form>
+                        <button class="btn" onclick="submitExam()">Submit Exam</button>
+                        <div id="examError" style="color: red; margin-top: 10px;"></div>
+                    </div>
+                </div>
+                <!-- Card displaying exam results -->
+                <div class="dashboard-card">
+                    <h3>Your Exam Results</h3>
+                    <div id="studentExamResults"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submission Page -->
+    <div id="submissionPage" class="container hidden">
+        <!-- Header with submission title and back button -->
+        <div class="header">
+            <h2><span style="color: #2563eb;">Athena</span> Submit Your Project</h2>
+            <button class="btn btn-secondary" onclick="goBackToDashboard()">Back to Dashboard</button>
+        </div>
+        <!-- Submission content area -->
+        <div class="dashboard-card">
+            <h3>Paste Your Project Submission Below</h3>
+            <textarea id="projectSubmission" class="textarea" placeholder="Enter your project submission here..." style="width: 100%; height: 200px; padding: 10px; border: 1px solid #d1d5db; border-radius: 4px;"></textarea>
+            <button class="btn" onclick="submitProject()">Submit Project</button>
+            <div id="submissionError" style="color: red; margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Code for the Application
+
+        // Predefined user data (username: {password, role})
+        const users = {
+            'teacher1': { password: 'pass123', role: 'teacher' },
+            'student1': { password: 'pass123', role: 'student' },
+            'student2': { password: 'pass123', role: 'student' },
+            'student3': { password: 'pass123', role: 'student' }
+        };
+
+        // List of skills for assignment and exam creation
+        const skills = [
+            'Creative Writing',
+            'Research Skills',
+            'Critical Thinking',
+            'Analysis',
+            'Communication',
+            'Problem Solving'
+        ];
+
+        // Grade boundaries for calculating letter grades
+        const gradeBoundaries = [
+            { grade: 'A*', minScore: 90 },
+            { grade: 'A', minScore: 80 },
+            { grade: 'B', minScore: 70 },
+            { grade: 'C', minScore: 60 },
+            { grade: 'D', minScore: 50 },
+            { grade: 'E', minScore: 40 },
+            { grade: 'F', minScore: 0 }
+        ];
+
+        // Subject colors mapping
+        const subjectColors = {
+            'Mathematics': '#2563eb', // Blue
+            'Science': '#16a34a',     // Green
+            'Literature': '#ea580c',  // Orange
+            'History': '#6b21a8'      // Purple
+            // Add more subjects and colors as needed
+        };
+
+        // Variables to store the state of the application
+        let selectedSkills = [];
+        let selectedExamSkills = [];
+        let currentUser = null;
+        let currentRole = null;
+        let assignments = [];
+        let exams = [];
+        let selectedAssignment = null;
+        let selectedExam = null;
+        let studentProjects = {}; // Stores students' selected projects and submissions
+        let studentSubmissions = {}; // For teachers to view student submissions
+        let examSubmissions = {}; // For exam submissions
+
+        // Function to handle user login
+        function login() {
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Check if the user exists and the password matches
+            if (users[username] && users[username].password === password) {
+                currentUser = username;
+                currentRole = users[username].role;
+                document.getElementById('loginError').textContent = '';
+
+                // Hide login page
+                document.getElementById('loginPage').classList.add('hidden');
+
+                // Initialize the appropriate dashboard based on the user's role
+                if (currentRole === 'teacher') {
+                    initializeTeacherDashboard();
+                } else {
+                    initializeStudentDashboard();
+                }
+            } else {
+                // Display an error message if credentials are invalid
+                document.getElementById('loginError').textContent = 'Invalid username or password.';
+            }
+        }
+
+        // Function to handle user logout
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            // Hide all dashboards and show the login page
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('submissionPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('loginUsername').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Function to initialize the teacher dashboard
+        function initializeTeacherDashboard() {
+            document.getElementById('teacherDashboard').classList.remove('hidden');
+            initializeSkillsList();
+            displayAssignments();
+            displayStudentSubmissions();
+            displayClassAverages();
+            displayExams();
+            displayExamResults();
+            showTeacherTab('assignments');
+        }
+
+        // Function to initialize the student dashboard
+        function initializeStudentDashboard() {
+            document.getElementById('studentDashboard').classList.remove('hidden');
+            displayStudentAssignments();
+            displaySelectedProject();
+            displayStudentAverageGrade();
+            displayAvailableExams();
+            displayStudentExamResults();
+            showStudentTab('assignments');
+        }
+
+        // Function to initialize the skills list for the teacher
+        function initializeSkillsList() {
+            const skillsList = document.getElementById('skillsList');
+            // Generate badges for each skill
+            skillsList.innerHTML = skills.map(skill => 
+                `<span class="badge" onclick="toggleSkill('${skill}')">${skill}</span>`
+            ).join('');
+
+            const examSkillsList = document.getElementById('examSkillsList');
+            examSkillsList.innerHTML = skills.map(skill => 
+                `<span class="badge" onclick="toggleExamSkill('${skill}')">${skill}</span>`
+            ).join('');
+        }
+
+        // Function to toggle the selection of a skill for assignments
+        function toggleSkill(skill) {
+            const index = selectedSkills.indexOf(skill);
+            if (index === -1) {
+                selectedSkills.push(skill);
+            } else {
+                selectedSkills.splice(index, 1);
+            }
+            updateSkillBadges();
+        }
+
+        // Function to toggle the selection of a skill for exams
+        function toggleExamSkill(skill) {
+            const index = selectedExamSkills.indexOf(skill);
+            if (index === -1) {
+                selectedExamSkills.push(skill);
+            } else {
+                selectedExamSkills.splice(index, 1);
+            }
+            updateExamSkillBadges();
+        }
+
+        // Function to update the visual state of skill badges for assignments
+        function updateSkillBadges() {
+            document.querySelectorAll('#skillsList .badge').forEach(badge => {
+                if (selectedSkills.includes(badge.textContent)) {
+                    badge.classList.add('selected');
+                } else {
+                    badge.classList.remove('selected');
+                }
+            });
+        }
+
+        // Function to update the visual state of skill badges for exams
+        function updateExamSkillBadges() {
+            document.querySelectorAll('#examSkillsList .badge').forEach(badge => {
+                if (selectedExamSkills.includes(badge.textContent)) {
+                    badge.classList.add('selected');
+                } else {
+                    badge.classList.remove('selected');
+                }
+            });
+        }
+
+        // Function to switch between Assignments and Exams tab in Teacher Dashboard
+        function showTeacherTab(tab) {
+            if (tab === 'assignments') {
+                document.getElementById('assignmentsSection').classList.remove('hidden');
+                document.getElementById('examsSection').classList.add('hidden');
+            } else {
+                document.getElementById('assignmentsSection').classList.add('hidden');
+                document.getElementById('examsSection').classList.remove('hidden');
+            }
+        }
+
+        // Function to create a new assignment
+        function createAssignment() {
+            const assignmentName = document.getElementById('assignmentName').value.trim();
+            const subject = document.getElementById('assignmentSubject').value;
+            const dueDate = document.getElementById('dueDate').value;
+
+            if (!assignmentName) {
+                alert('Please enter an assignment name.');
+                return;
+            }
+
+            if (!subject) {
+                alert('Please select a subject.');
+                return;
+            }
+
+            if (selectedSkills.length === 0) {
+                alert('Please select at least one skill.');
+                return;
+            }
+
+            if (!dueDate) {
+                alert('Please select a due date.');
+                return;
+            }
+
+            const assignment = {
+                id: Date.now(),
+                name: assignmentName,
+                subject: subject,
+                skills: [...selectedSkills],
+                dueDate: dueDate,
+                teacher: currentUser // Associate assignment with the teacher
+            };
+            assignments.push(assignment);
+            selectedSkills = [];
+            updateSkillBadges();
+            document.getElementById('dueDate').value = '';
+            document.getElementById('assignmentName').value = '';
+            document.getElementById('assignmentSubject').value = '';
+            displayAssignments();
+            alert('Assignment created successfully!');
+        }
+
+        // Function to display assignments on the teacher dashboard
+        function displayAssignments() {
+            const assignmentsList = document.getElementById('assignmentsList');
+            const teacherAssignments = assignments.filter(a => a.teacher === currentUser);
+            if (teacherAssignments.length === 0) {
+                assignmentsList.innerHTML = '<p>No assignments created yet.</p>';
+                return;
+            }
+            assignmentsList.innerHTML = teacherAssignments.map(assignment => `
+                <div class="project-card" style="border-left: 5px solid ${subjectColors[assignment.subject]};">
+                    <div class="subject-label subject-${assignment.subject}">${assignment.subject}</div>
+                    <p><strong>Assignment ID:</strong> ${assignment.id}</p>
+                    <p><strong>Name:</strong> ${assignment.name}</p>
+                    <p><strong>Skills:</strong> ${assignment.skills.join(', ')}</p>
+                    <p><strong>Due Date:</strong> ${assignment.dueDate}</p>
+                    <p><strong>Created By:</strong> ${assignment.teacher}</p>
+                </div>
+            `).join('');
+        }
+
+        // Function to display student submissions (for teachers)
+        function displayStudentSubmissions() {
+            const studentSubmissionsDiv = document.getElementById('studentSubmissions');
+            let content = '';
+            assignments.forEach(assignment => {
+                // Only show assignments created by the teacher
+                if (assignment.teacher !== currentUser) return;
+
+                if (studentSubmissions[assignment.id]) {
+                    content += `<h4>Assignment: ${assignment.name} (ID: ${assignment.id})</h4>`;
+                    for (const student in studentSubmissions[assignment.id]) {
+                        const submission = studentSubmissions[assignment.id][student];
+                        content += `
+                            <div class="project-card" style="border-left: 5px solid ${subjectColors[assignment.subject]};">
+                                <div class="subject-label subject-${assignment.subject}">${assignment.subject}</div>
+                                <p><strong>Student:</strong> ${student}</p>
+                                <p><strong>Project Idea:</strong> ${submission.projectIdea}</p>
+                                <p><strong>Status:</strong> <span class="${getStatusClass(submission.status)}">${capitalizeFirstLetter(submission.status)}</span></p>
+                                ${submission.submission ? `<p><strong>Submission:</strong> ${submission.submission}</p>` : ''}
+                                ${submission.status === 'submitted' && submission.grade === null ? 
+                                    `<button class="btn" onclick="gradeSubmission('${assignment.id}', '${student}')">Grade Submission</button>` : ''}
+                                ${submission.grade !== null ? `<p><strong>Grade:</strong> ${submission.grade}/100 (${getGradeLetter(submission.grade)})</p>` : ''}
+                                ${submission.comments ? `<p><strong>Teacher's Comments:</strong> ${submission.comments}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                }
+            });
+            studentSubmissionsDiv.innerHTML = content || '<p>No submissions yet.</p>';
+        }
+
+        // Function to display class averages on the teacher dashboard
+        function displayClassAverages() {
+            const classAveragesDiv = document.getElementById('classAverages');
+            let content = '';
+            let totalClassGrade = 0;
+            let totalSubmissions = 0;
+
+            // Get all students who have submissions for this teacher's assignments
+            const teacherAssignments = assignments.filter(a => a.teacher === currentUser);
+            const studentsSet = new Set();
+            teacherAssignments.forEach(assignment => {
+                if (studentSubmissions[assignment.id]) {
+                    Object.keys(studentSubmissions[assignment.id]).forEach(student => {
+                        studentsSet.add(student);
+                    });
+                }
+            });
+
+            const studentAverages = {};
+
+            studentsSet.forEach(student => {
+                let totalGrade = 0;
+                let count = 0;
+                teacherAssignments.forEach(assignment => {
+                    const submission = studentSubmissions[assignment.id][student];
+                    if (submission && submission.grade !== null) {
+                        totalGrade += submission.grade;
+                        count++;
+                    }
+                });
+                const average = count > 0 ? (totalGrade / count).toFixed(2) : 'N/A';
+                studentAverages[student] = average;
+                if (average !== 'N/A') {
+                    totalClassGrade += parseFloat(average);
+                    totalSubmissions++;
+                }
+            });
+
+            content += '<h4>Student Averages:</h4>';
+            content += '<ul>';
+            for (const student in studentAverages) {
+                content += `<li><strong>${student}:</strong> ${studentAverages[student]}${studentAverages[student] !== 'N/A' ? '/100' : ''}</li>`;
+            }
+            content += '</ul>';
+
+            const classAverage = totalSubmissions > 0 ? (totalClassGrade / totalSubmissions).toFixed(2) : 'N/A';
+            content += `<p><strong>Class Average:</strong> ${classAverage}${classAverage !== 'N/A' ? '/100' : ''}</p>`;
+
+            classAveragesDiv.innerHTML = content;
+        }
+
+        // Function to display exams on the teacher dashboard
+        function displayExams() {
+            const examsList = document.getElementById('examsList');
+            const teacherExams = exams.filter(e => e.teacher === currentUser);
+            if (teacherExams.length === 0) {
+                examsList.innerHTML = '<p>No exams created yet.</p>';
+                return;
+            }
+            examsList.innerHTML = teacherExams.map(exam => `
+                <div class="project-card" style="border-left: 5px solid ${subjectColors[exam.subject]};">
+                    <div class="subject-label subject-${exam.subject}">${exam.subject}</div>
+                    <p><strong>Exam ID:</strong> ${exam.id}</p>
+                    <p><strong>Name:</strong> ${exam.name}</p>
+                    <p><strong>Skills:</strong> ${exam.skills.join(', ')}</p>
+                    <p><strong>Number of Questions:</strong> ${exam.numQuestions}</p>
+                    <p><strong>Created By:</strong> ${exam.teacher}</p>
+                </div>
+            `).join('');
+        }
+
+        // Function to display exam results to teachers
+        function displayExamResults() {
+            const examResultsDiv = document.getElementById('examResults');
+            let content = '';
+            exams.forEach(exam => {
+                // Only show exams created by the teacher
+                if (exam.teacher !== currentUser) return;
+
+                content += `<h4>Exam: ${exam.name} (ID: ${exam.id})</h4>`;
+                for (const student in examSubmissions) {
+                    const submission = examSubmissions[student][exam.id];
+                    if (submission) {
+                        content += `
+                            <div class="exam-card">
+                                <p><strong>Student:</strong> ${student}</p>
+                                <p><strong>Score:</strong> ${submission.score}%</p>
+                                <p><strong>Date Taken:</strong> ${submission.date}</p>
+                            </div>
+                        `;
+                    }
+                }
+            });
+            examResultsDiv.innerHTML = content || '<p>No exam results yet.</p>';
+        }
+
+        // Function to create a new exam
+        function createExam() {
+            const examName = document.getElementById('examName').value.trim();
+            const subject = document.getElementById('examSubject').value;
+            const numQuestions = parseInt(document.getElementById('numQuestions').value);
+
+            if (!examName) {
+                alert('Please enter an exam name.');
+                return;
+            }
+
+            if (!subject) {
+                alert('Please select a subject.');
+                return;
+            }
+
+            if (selectedExamSkills.length === 0) {
+                alert('Please select at least one skill.');
+                return;
+            }
+
+            if (isNaN(numQuestions) || numQuestions <= 0) {
+                alert('Please enter a valid number of questions.');
+                return;
+            }
+
+            const exam = {
+                id: Date.now(),
+                name: examName,
+                subject: subject,
+                skills: [...selectedExamSkills],
+                numQuestions: numQuestions,
+                teacher: currentUser, // Associate exam with the teacher
+                questions: generateExamQuestions(numQuestions, subject, selectedExamSkills)
+            };
+            exams.push(exam);
+            selectedExamSkills = [];
+            updateExamSkillBadges();
+            document.getElementById('examName').value = '';
+            document.getElementById('examSubject').value = '';
+            document.getElementById('numQuestions').value = 5;
+            displayExams();
+            alert('Exam created successfully!');
+        }
+
+        // Function to generate exam questions
+        function generateExamQuestions(num, subject, skills) {
+            const questions = [];
+            for (let i = 0; i < num; i++) {
+                const questionText = `Question ${i + 1}: ${subject} question related to ${skills.join(', ')}.`;
+                const options = [
+                    `Option A for question ${i + 1}`,
+                    `Option B for question ${i + 1}`,
+                    `Option C for question ${i + 1}`,
+                    `Option D for question ${i + 1}`
+                ];
+                const correctOption = options[Math.floor(Math.random() * options.length)];
+                questions.push({
+                    text: questionText,
+                    options: options,
+                    correctAnswer: correctOption
+                });
+            }
+            return questions;
+        }
+
+        // Function to grade a student's submission
+        function gradeSubmission(assignmentId, student) {
+            const submission = studentSubmissions[assignmentId][student];
+            const grade = prompt(`Enter grade for ${student}'s submission (out of 100):`, submission.grade !== null ? submission.grade : '');
+            if (grade !== null && !isNaN(grade) && grade >= 0 && grade <= 100) {
+                const comments = prompt(`Enter comments for ${student}'s submission:`, submission.comments || '');
+                submission.grade = parseFloat(grade);
+                submission.comments = comments;
+                submission.status = 'graded';
+                if (!studentProjects[student]) studentProjects[student] = {};
+                studentProjects[student].grade = submission.grade;
+                studentProjects[student].comments = submission.comments;
+                studentProjects[student].status = 'graded';
+                displayStudentSubmissions();
+                displayClassAverages();
+                alert('Grade and comments saved.');
+            } else {
+                alert('Invalid grade entered.');
+            }
+        }
+
+        // Function to switch between Assignments and Exams tab in Student Dashboard
+        function showStudentTab(tab) {
+            if (tab === 'assignments') {
+                document.getElementById('studentAssignmentsSection').classList.remove('hidden');
+                document.getElementById('studentExamsSection').classList.add('hidden');
+            } else {
+                document.getElementById('studentAssignmentsSection').classList.add('hidden');
+                document.getElementById('studentExamsSection').classList.remove('hidden');
+            }
+        }
+
+        // Function to display assignments on the student dashboard
+        function displayStudentAssignments() {
+            const studentAssignmentsList = document.getElementById('studentAssignmentsList');
+            const classAssignments = assignments; // All assignments are accessible to all students
+
+            if (classAssignments.length === 0) {
+                studentAssignmentsList.innerHTML = '<p>No assignments available at the moment.</p>';
+                return;
+            }
+            studentAssignmentsList.innerHTML = classAssignments.map(assignment => `
+                <div class="project-card" style="border-left: 5px solid ${subjectColors[assignment.subject]};">
+                    <div class="subject-label subject-${assignment.subject}">${assignment.subject}</div>
+                    <p><strong>Assignment ID:</strong> ${assignment.id}</p>
+                    <p><strong>Name:</strong> ${assignment.name}</p>
+                    <p><strong>Skills:</strong> ${assignment.skills.join(', ')}</p>
+                    <p><strong>Due Date:</strong> ${assignment.dueDate}</p>
+                    <p><strong>Created By:</strong> ${assignment.teacher}</p>
+                    ${studentProjects[currentUser] && studentProjects[currentUser].assignmentId === assignment.id ? 
+                        '<p><em>Already Selected</em></p>' :
+                        `<button class="btn" onclick="selectAssignment(${assignment.id})">Start Assignment</button>`
+                    }
+                </div>
+            `).join('');
+        }
+
+        // Function for a student to select an assignment
+        function selectAssignment(id) {
+            selectedAssignment = assignments.find(a => a.id === id);
+            document.getElementById('projectIdeasSection').classList.remove('hidden');
+            document.getElementById('displayProjectsSection').classList.add('hidden');
+            document.getElementById('studentTopic').value = '';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Function to generate project ideas based on the student's topic
+        function generateProjects() {
+            const topic = document.getElementById('studentTopic').value.trim();
+            if (!topic) {
+                alert('Please enter a topic.');
+                return;
+            }
+            const projectIdeas = generateProjectIdeas(topic);
+            displayProjectIdeas(projectIdeas);
+        }
+
+        // Function to generate project ideas using predefined templates
+        function generateProjectIdeas(topic) {
+            const ideaTemplates = [
+                `Write an essay on how ${topic} impacted daily life during the Medieval period.`,
+                `Research the significance of ${topic} during the Industrial Revolution and present your findings.`,
+                `Create a poster illustrating the role of ${topic} in Ancient Egyptian society.`,
+                `Compose a diary entry from the perspective of someone experiencing ${topic} during World War II.`,
+                `Develop a presentation about how ${topic} has evolved from the Renaissance to modern times.`,
+                `Write a story set in the Victorian era where ${topic} plays a central role.`,
+                `Investigate the influence of ${topic} on the environment and suggest ways to address related issues.`,
+                `Create a timeline showing major events related to ${topic} throughout history.`,
+                `Design a comic strip that explains ${topic} to younger students.`,
+                `Prepare a speech on the importance of ${topic} in today's world and how it affects young people.`,
+                `Research a famous individual associated with ${topic} and create a biography highlighting their contributions.`,
+                `Explore how ${topic} is represented in different cultures and write a comparative report.`,
+                `Write a newspaper article covering a significant event involving ${topic} in the 20th century.`,
+                `Develop an experiment to demonstrate the principles of ${topic} in science.`,
+                `Create a short documentary video explaining the key aspects of ${topic} and its relevance to modern society.`,
+                `Analyze the impact of ${topic} on society during the Tudor period.`,
+                `Write a poem that expresses the emotions associated with ${topic} during World War I.`,
+                `Create a map showing how ${topic} spread across different regions during ancient times.`,
+                `Develop a booklet teaching younger students about ${topic} during the Stone Age.`,
+                `Investigate how ${topic} influenced art and culture during the Baroque period and present your findings.`,
+            ];
+
+            // Randomly select three unique ideas
+            const selectedIdeas = [];
+            while (selectedIdeas.length < 3) {
+                const randomIndex = Math.floor(Math.random() * ideaTemplates.length);
+                const idea = ideaTemplates[randomIndex];
+                if (!selectedIdeas.includes(idea)) {
+                    selectedIdeas.push(idea);
+                }
+            }
+
+            return selectedIdeas;
+        }
+
+        // Function to display generated project ideas to the student
+        function displayProjectIdeas(ideas) {
+            const projectsList = document.getElementById('projectsList');
+            projectsList.innerHTML = ideas.map((idea, i) => `
+                <div class="project-card">
+                    <h3>Project Option ${i + 1}</h3>
+                    <p>${idea}</p>
+                    <button class="btn" onclick="selectProject(${i}, '${idea.replace(/'/g, "\\'")}')">Choose This Project</button>
+                </div>
+            `).join('');
+            document.getElementById('displayProjectsSection').classList.remove('hidden');
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Function for a student to select a project idea
+        function selectProject(index, idea) {
+            alert(`Project Option ${index + 1} selected!`);
+            studentProjects[currentUser] = {
+                assignmentId: selectedAssignment.id,
+                projectIdea: idea,
+                submission: '',
+                status: 'pending',
+                grade: null,
+                comments: null
+            };
+            if (!studentSubmissions[selectedAssignment.id]) {
+                studentSubmissions[selectedAssignment.id] = {};
+            }
+            studentSubmissions[selectedAssignment.id][currentUser] = studentProjects[currentUser];
+            displaySelectedProject();
+            displayStudentAssignments();
+            displayStudentAverageGrade();
+            document.getElementById('projectIdeasSection').classList.add('hidden');
+            document.getElementById('displayProjectsSection').classList.add('hidden');
+            navigateToSubmissionPage();
+            window.scrollTo(0, 0);
+        }
+
+        // Function to navigate to the Submission Page
+        function navigateToSubmissionPage() {
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('submissionPage').classList.remove('hidden');
+        }
+
+        // Function to go back to the Student Dashboard from Submission Page
+        function goBackToDashboard() {
+            document.getElementById('submissionPage').classList.add('hidden');
+            document.getElementById('studentDashboard').classList.remove('hidden');
+        }
+
+        // Function to submit the project from Submission Page
+        function submitProject() {
+            const submissionText = document.getElementById('projectSubmission').value.trim();
+            const submissionError = document.getElementById('submissionError');
+
+            if (!submissionText) {
+                submissionError.textContent = 'Please enter your project submission.';
+                return;
+            }
+
+            const project = studentProjects[currentUser];
+            project.submission = submissionText;
+            project.status = 'submitted';
+            studentSubmissions[selectedAssignment.id][currentUser] = project;
+            displaySelectedProject();
+            displayStudentAverageGrade();
+            submissionError.textContent = '';
+            alert('Project submitted successfully!');
+            goBackToDashboard();
+        }
+
+        // Function to display the student's selected project
+        function displaySelectedProject() {
+            const selectedProjectSection = document.getElementById('selectedProjectSection');
+            if (studentProjects[currentUser]) {
+                selectedProjectSection.classList.remove('hidden');
+                selectedProjectSection.classList.add('active');
+                const project = studentProjects[currentUser];
+                selectedAssignment = assignments.find(a => a.id === project.assignmentId);
+                const selectedProject = document.getElementById('selectedProject');
+                selectedProject.innerHTML = `
+                    <div class="submission-card">
+                        <div class="submission-header">
+                            <div>
+                                <strong>Assignment:</strong> ${selectedAssignment.name}
+                            </div>
+                            <div class="${getStatusClass(project.status)}">
+                                Status: <span>${capitalizeFirstLetter(project.status)}</span>
+                            </div>
+                        </div>
+                        <div class="submission-content">
+                            <p><strong>Project Idea:</strong> ${project.projectIdea}</p>
+                            ${project.grade !== null ? `<p><strong>Grade:</strong> ${project.grade}/100 (${getGradeLetter(project.grade)})</p>` : ''}
+                            ${project.comments ? `<p><strong>Teacher's Comments:</strong> ${project.comments}</p>` : ''}
+                        </div>
+                        ${project.status !== 'graded' ? `<div class="submission-actions"><button class="btn" onclick="openSubmission()">Submit Project</button></div>` : ''}
+                    </div>
+                `;
+            } else {
+                selectedProjectSection.classList.remove('active');
+                selectedProjectSection.classList.add('hidden');
+            }
+        }
+
+        // Function to open the submission page
+        function openSubmission() {
+            navigateToSubmissionPage();
+        }
+
+        // Function to display the student's average grade
+        function displayStudentAverageGrade() {
+            let totalGrade = 0;
+            let count = 0;
+            for (const assignmentId in studentSubmissions) {
+                const submission = studentSubmissions[assignmentId][currentUser];
+                if (submission && submission.grade !== null) {
+                    totalGrade += submission.grade;
+                    count++;
+                }
+            }
+            const average = count > 0 ? (totalGrade / count).toFixed(2) : 'N/A';
+            const studentAverageGradeDiv = document.getElementById('studentAverageGrade');
+            studentAverageGradeDiv.innerHTML = `<p><strong>Your Average Grade:</strong> ${average}${average !== 'N/A' ? '/100' : ''}</p>`;
+        }
+
+        // Function to display available exams to students
+        function displayAvailableExams() {
+            const availableExamsList = document.getElementById('availableExamsList');
+            if (exams.length === 0) {
+                availableExamsList.innerHTML = '<p>No exams available at the moment.</p>';
+                return;
+            }
+            availableExamsList.innerHTML = exams.map(exam => `
+                <div class="project-card" style="border-left: 5px solid ${subjectColors[exam.subject]};">
+                    <div class="subject-label subject-${exam.subject}">${exam.subject}</div>
+                    <p><strong>Exam ID:</strong> ${exam.id}</p>
+                    <p><strong>Name:</strong> ${exam.name}</p>
+                    <p><strong>Skills:</strong> ${exam.skills.join(', ')}</p>
+                    <p><strong>Number of Questions:</strong> ${exam.numQuestions}</p>
+                    <p><strong>Created By:</strong> ${exam.teacher}</p>
+                    ${examSubmissions[currentUser] && examSubmissions[currentUser][exam.id] ? 
+                        '<p><em>Exam Completed</em></p>' :
+                        `<button class="btn" onclick="startExam(${exam.id})">Start Exam</button>`
+                    }
+                </div>
+            `).join('');
+        }
+
+        // Function to start an exam
+        function startExam(examId) {
+            selectedExam = exams.find(e => e.id === examId);
+            document.getElementById('examDetailsSection').classList.remove('hidden');
+            document.getElementById('examTitle').textContent = selectedExam.name;
+            const examForm = document.getElementById('examForm');
+            examForm.innerHTML = selectedExam.questions.map((question, index) => `
+                <div class="question">
+                    <h4>${question.text}</h4>
+                    <ul class="options">
+                        ${question.options.map(option => `
+                            <li>
+                                <label>
+                                    <input type="radio" name="question${index}" value="${option}">
+                                    ${option}
+                                </label>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        // Function to submit an exam
+        function submitExam() {
+            const examError = document.getElementById('examError');
+            const examForm = document.getElementById('examForm');
+            const formData = new FormData(examForm);
+            const answers = {};
+            for (let i = 0; i < selectedExam.questions.length; i++) {
+                const answer = formData.get(`question${i}`);
+                if (!answer) {
+                    examError.textContent = 'Please answer all questions.';
+                    return;
+                }
+                answers[i] = answer;
+            }
+
+            // Grade the exam
+            let correctCount = 0;
+            selectedExam.questions.forEach((question, index) => {
+                if (answers[index] === question.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            const score = ((correctCount / selectedExam.questions.length) * 100).toFixed(2);
+            // Store the result
+            if (!examSubmissions[currentUser]) examSubmissions[currentUser] = {};
+            examSubmissions[currentUser][selectedExam.id] = {
+                examId: selectedExam.id,
+                score: score,
+                answers: answers,
+                date: new Date().toLocaleString()
+            };
+            alert('Exam submitted successfully!');
+            displayAvailableExams();
+            displayStudentExamResults();
+            displayExamResults();
+            document.getElementById('examDetailsSection').classList.add('hidden');
+        }
+
+        // Function to display exam results to students
+        function displayStudentExamResults() {
+            const studentExamResultsDiv = document.getElementById('studentExamResults');
+            const submissions = examSubmissions[currentUser];
+            if (!submissions || Object.keys(submissions).length === 0) {
+                studentExamResultsDiv.innerHTML = '<p>No exam results available.</p>';
+                return;
+            }
+            let content = '';
+            for (const examId in submissions) {
+                const submission = submissions[examId];
+                const exam = exams.find(e => e.id == examId);
+                content += `
+                    <div class="exam-card">
+                        <p><strong>Exam:</strong> ${exam.name}</p>
+                        <p><strong>Score:</strong> ${submission.score}%</p>
+                        <p><strong>Date Taken:</strong> ${submission.date}</p>
+                    </div>
+                `;
+            }
+            studentExamResultsDiv.innerHTML = content;
+        }
+
+        // Helper function to capitalize the first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Helper function to get status class
+        function getStatusClass(status) {
+            switch(status) {
+                case 'submitted':
+                    return 'status-submitted';
+                case 'pending':
+                    return 'status-pending';
+                case 'graded':
+                    return 'status-graded';
+                default:
+                    return '';
+            }
+        }
+
+        // Function to convert a numeric score to a letter grade
+        function getGradeLetter(score) {
+            for (const boundary of gradeBoundaries) {
+                if (score >= boundary.minScore) {
+                    return boundary.grade;
+                }
+            }
+            return 'F';
+        }
+
+    </script>
+</body>
+</html>
